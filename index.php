@@ -6,6 +6,8 @@ if(!isset($_SESSION['userId'])){
     header('Location: login.php');        // to funkcja ktora przekierowuje, link
 }
 
+
+
 ?>
 
 <html>
@@ -14,5 +16,10 @@ if(!isset($_SESSION['userId'])){
     </head>
     <body>
         Strona Główna
+        <?php
+            if(isset($_SESSION['userId'])){
+                echo "<a href='logout.php'>logout</a>";
+            }
+        ?>
     </body>
 </html>
