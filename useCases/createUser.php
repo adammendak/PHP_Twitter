@@ -8,7 +8,7 @@ $user1 -> setName('Adam');
 $user1 -> setEmail('adam.mendak@gmail.com');
 $user1 -> setPassword('trudnehaslo');
 
-var_dump($user1 ->saveToDB($conn));
+//var_dump($user1 ->saveToDB($conn));
 
 $conn -> close();
 $conn = null;
