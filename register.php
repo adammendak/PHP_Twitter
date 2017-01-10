@@ -1,14 +1,10 @@
 <?php
-
-
-
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
      if(isset($_POST['name']) && strlen(trim($_POST['name'])) > 0 
     && isset($_POST['email']) && strlen(trim($_POST['email'])) >= 5
     && isset($_POST['password']) && strlen(trim($_POST['password'])) >= 6
     && isset($_POST['retyped_password']) 
     && trim($_POST['password']) == trim($_POST['retyped_password'])){
-         
          require_once 'src/User.php';
          require_once 'connection.php';
          
@@ -25,9 +21,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
      }else{
          echo "bledne dane w formularzu";
      }
-     
-     
-             
 }
 ?>
 
@@ -48,17 +41,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <br>
             <label>
                 Password: <br>
-                <input type="text" name='password'>
+                <input type="password" name='password'>
             </label>
             <br>
             <label>
                 Repeat Password: <br>
-                <input type='password' name="retyped_password">
+                <input type='password' name="retyped_password"><br>
                 <input type="submit" value="register">
     </body>
-    
-    
-    
-    
-    
 </html>

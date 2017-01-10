@@ -49,7 +49,6 @@ class User {
         if($this -> id == -1){
             $query="INSERT INTO Users (email, name, hashed_password) 
                     VALUES ('{$this -> email}', '{$this -> name}', '{$this -> hashedPassword}')";
-            echo $query;
             if($connection -> query($query)){
                 $this -> id = $connection -> insert_id;
                 return true;
@@ -58,10 +57,10 @@ class User {
             }
         }else{
             $sql = "UPDATE Users 
-                    SET name = '$this->name', 
-                    email = '$this->email',
-                    hashed_password = '$this->hashedPassword'
-                    WHERE id = $this->id";
+                    SET name = '{$this->name}', 
+                    email = '{$this->email}',
+                    hashed_password = '{$this->hashedPassword}'
+                    WHERE id = '{$this->id}'";
             
             if($connection ->query($sql)){
                 return true;
@@ -73,7 +72,6 @@ class User {
     
     static public function loadUserById(mysqli $connection, $id){
         $query = "SELECT * FROM Users WHERE id = ". $connection ->real_escape_string($id);
-        // ten real escape przed sql injection broni
         
         $res = $connection -> query($query);
         if($res && $res -> num_rows == 1){
@@ -133,7 +131,7 @@ class User {
         
         if($res && $res->num_rows == 1){
             $row = $res->fetch_assoc();
-            $user = new User(); $user = new User();
+            $user = new User();
             $user -> id = $row['id'];
             $user -> setName($row['name']);
             $user -> setEmail($row['email']);
