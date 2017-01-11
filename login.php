@@ -26,9 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 
-<html>
+<html lang="pl">
 <head>
-
+    <meta charset="utf-8">
+    <title>Strona Główna</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <form method="POST">

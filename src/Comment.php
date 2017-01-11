@@ -73,7 +73,6 @@ class Comment
                 "VALUES('$this->id_usera', '$this->id_postu', '$this->text', '$this->creationDate')";
             if ($connection->query($query)) {
                 $this->id = $connection->insert_id;
-                echo "komentarz dodany";
                 return TRUE;
             } else {
                 return FALSE;

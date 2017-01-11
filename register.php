@@ -15,6 +15,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
          
          if($user ->saveToDB($conn)){
              echo "Udalo sie zarejestrowac uzytkownika";
+             header('Location: index.php');
          }else{
              echo "nie udalo sie zarejestrowac uzytkownika";
          }
@@ -26,11 +27,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
 <html>
-    <head></head>
+    <head>
+        <meta charset="utf-8">
+        <title>Strona Główna</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
     <body>
         <form method ='POST'>
             <label>
-                Name: <br>
+                Imię: <br>
                 <input type='text' name='name'>
             </label>
             <br>
@@ -40,13 +45,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             </label>
             <br>
             <label>
-                Password: <br>
+                Hasło: <br>
                 <input type="password" name='password'>
             </label>
             <br>
             <label>
-                Repeat Password: <br>
+                Powtórz hasło: <br>
                 <input type='password' name="retyped_password"><br>
-                <input type="submit" value="register">
+                <input type="submit" value="register"><br>
+                <a href="login.php">strona logowania</a>
     </body>
 </html>

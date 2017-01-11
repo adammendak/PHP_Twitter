@@ -72,18 +72,17 @@ class Tweet
         }
     }
 
-    static public function loadTweetByUserID(mysqli $connection, $userId)
+    static public function loadTweetByUserId(mysqli $connection, $userId)
     {
         $query = "SELECT * FROM Tweet WHERE userId = " . $connection->real_escape_string($userId);
         $tweets = [];
-
         $res = $connection->query($query);
-        if ($res && $res->num_rows == 1) {
+        if ($res && $res->num_rows > 0) {
             foreach ($res as $row) {
 //                $row = $res->fetch_assoc();
                 $tweet = new Tweet();
                 $tweet->id = $row['id'];
-                $tweet->userId = $row['userID'];
+                $tweet->userId = $row['userId'];
                 $tweet->text = $row['text'];
                 $tweet->creationDate = $row['creationDate'];
                 $tweets[] = $tweet;

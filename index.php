@@ -43,29 +43,45 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addCommentForm']) && st
 
 ?>
 
-<html>
+<html lang="pl">
     <head>
-        
+        <meta charset="utf-8">
+        <title>Strona Główna</title>
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <nav>
-        Strona Główna<br>
-            <a href="userPage.php">przejdz na strone uzytkownika</a>
+        Strona Główna, Witaj <?php echo $loggedUser->getName();?><br>
+            <?php echo '<a href="userPage.php?userId=' . $loggedUser->getId() . '">Twoja Tablica</a>' ?>
         <?php
-            if(isset($_SESSION['userId'])){
+            if(isset($_SESSION['userId'])) {
                 echo "<a href='logout.php'>logout</a>";
             }
         ?>
 
         </nav>
     <main>
-        <form action="#" method="POST">
-            Dodaj Tweeta:<br>
+        <section class="allUsers">
+            <h3>lista użytkowników:</h3>
+            <?php
+            $allUsers = User::loadAllUsers($conn);
+            foreach ($allUsers as $user) {
+                if($user->getId() != $loggedUserId) {
+                    echo '<div class="showUser" >' . $user->getName();
+                    echo ' <a href="userPage.php?userId=' . $user->getId() . '">Wyślij wiadomość użytkownikowi</a></div><br>';
+                }
+            }
+            ?>
+        </section>
+        <section class="addTweetForm">
+            <h3>Dodaj Tweeta:</h3><br>
+            <form action="#" method="POST">
             <input type="text" name="addTweet">
             <input type="hidden" name="addTweetForm" value="addTweetForm">
             <input type="submit" value="Dodaj Tweeta">
         </form>
-        <div class="TweetTable">
+        </section>
+        <section class="tweetTable">
             <?php
             $tweets = Tweet::loadAllTweets($conn);
             foreach ($tweets as $tweet) {
@@ -85,15 +101,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addCommentForm']) && st
                     };
                 echo '</div>';
                 echo '<form method="POST" >
-                <input type="hidden" name="addCommentForm" value="addCommentForm">
-                <input type="text" name="addComment">
-                <input type="hidden" name="tweetId" value="' . $tweet->getID() . '"><br> 
-                <input type="submit" value="Dodaj komentarz">
-            </form>
-        ';
-                }
+                    <input type="hidden" name="addCommentForm" value="addCommentForm">
+                    <input type="text" name="addComment">
+                    <input type="hidden" name="tweetId" value="' . $tweet->getID() . '"><br> 
+                    <input type="submit" value="Dodaj komentarz">
+                </form>';
+                };
                 ?>
-        </div>
+        </section>
     </main>
     </body>
 </html>

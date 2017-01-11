@@ -61,8 +61,8 @@ class User {
                     email = '{$this->email}',
                     hashed_password = '{$this->hashedPassword}'
                     WHERE id = '{$this->id}'";
-            
             if($connection ->query($sql)){
+
                 return true;
             }else{
                 return false;
