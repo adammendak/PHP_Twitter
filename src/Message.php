@@ -6,7 +6,7 @@ class Message
     private $id;
     private $senderId;
     private $receiverId;
-    private $massage;
+    private $message;
     private $messageRead;
     private $creationDate;
 
@@ -15,7 +15,7 @@ class Message
         $this->id = -1;
         $this->senderId = '';
         $this->receiverId = '';
-        $this->massage = '';
+        $this->message = '';
         $this->messageRead = 0;
         $this->creationDate = '';
     }
@@ -27,7 +27,7 @@ class Message
 
     public function setSenderId($senderId)
     {
-        $this->senderId = $senderId;
+        return $this->senderId = $senderId;
     }
 
     function getSenderId()
@@ -42,32 +42,22 @@ class Message
 
     function setReceiverId($receiverId)
     {
-        $this->receiverId = $receiverId;
+        return $this->receiverId = $receiverId;
     }
 
-    function getMassage()
+    function getMessage()
     {
-        return $this->massage;
+        return $this->message;
     }
 
-    function setMassage($massage)
+    function setMessage($message)
     {
-        $this->massage = $massage;
-    }
-
-    function getStatus()
-    {
-        return $this->status;
-    }
-
-    function setStatus($status)
-    {
-        $this->status = $status;
+        return $this->message = $message;
     }
 
     public function setCreationDate($date)
     {
-        $this->creationDate = $date;
+        return $this->creationDate = $date;
     }
 
     public function getCreationDate()
@@ -75,11 +65,21 @@ class Message
         return $this->creationDate;
     }
 
+    public function setMessageRead($messageRead)
+    {
+        return $this->messageRead = $messageRead;
+    }
+
+    public function getMessageRead()
+    {
+        return $this->messageRead;
+    }
+
     public function saveToDB(mysqli $connection)
     {
         if ($this->id == -1) {
             $query = "INSERT INTO Message (senderId, receiverId, message, messageRead, creationDate)
-                    VALUES( '$this->senderId', '$this->receiverId', '$this->massage', '$this->messageRead', 
+                    VALUES( '$this->senderId', '$this->receiverId', '$this->message', '$this->messageRead', 
                     '$this->creationDate')";
             if ($connection->query($query)) {
                 $this->id = $connection->insert_id;
@@ -113,7 +113,25 @@ class Message
         }
     }
 
-    static public function loadAllMassagesReceivedByUser(mysqli $connection, $userId)
+    static public function updateMessageRead(mysqli $connection, $messageId)
+    {
+        $query = "SELECT * FROM Message WHERE id ='" . $connection->real_escape_string($messageId) . "'";
+        $res = $connection->query($query);
+        if($res) {
+            $updateQuery = "UPDATE Message SET MessageRead = '1' WHERE id = '$messageId' ";
+            if($result = $connection ->query($updateQuery)) {
+                return true;
+            } else {
+                return NULL;
+            };
+
+        }
+            return false;
+
+    }
+
+
+    static public function loadAllMassagesToReceiver(mysqli $connection, $userId)
     {
         $query = "SELECT * FROM Message WHERE receiverId= '" . $connection->real_escape_string($userId) . "'
                 ORDER BY creationDate DESC";
@@ -148,7 +166,7 @@ class Message
             $message->message = $row['message'];
             $message->messageRead = $row['messageRead'];
             $message->creationDate = $row['creationDate'];
-            return $massage;
+            return $message;
         }
         return null;
     }

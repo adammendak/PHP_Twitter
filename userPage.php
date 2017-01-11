@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addCommentForm']) && st
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['messageForm']) &&  strlen(trim($_POST['message'])) > 0) {
     $message = new Message ();
-    $message->setMassage($_POST['message']);
+    $message->setMessage($_POST['message']);
     $message->setSenderId($loggedUserId);
     $message->setReceiverId($_POST['receiver']);
     $message->setCreationDate(date('Y-m-d-h:i:s'));
@@ -44,6 +44,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['messageForm']) &&  strl
         <meta charset="utf-8">
         <link rel="stylesheet" href="css/style.css">
         <title>Strona Użytkownika</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
     <body>
         <nav>
@@ -112,9 +116,32 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['messageForm']) &&  strl
                     </form >
                     ';
                 } else {
-                    echo '<h3>Wszystkie Twoje Wiadomości:</h3>';
-                    $messages = Message::loadAllMassagesReceivedByUser($conn, $loggedUserId);
-                    var_dump($messages);
+                    echo '<h3>Otrzymane Wiadomości:</h3>';
+                    $messages = Message::loadAllMassagesToReceiver($conn, $loggedUserId);
+                    foreach ($messages as $message) {
+                        $messageAuthorId = $message->getSenderId();
+                        $messageAuthor = User::loadUserbyId($conn, $messageAuthorId);
+                        echo '<div class="messageAuthor">wiadomośc otrzymana od: ' . $messageAuthor->getName() .
+                            '</div>';
+                        if($message->getMessageRead() == 0) {
+                            echo "Wiadomość nieprzeczytana";
+                        }
+                        echo '<div class="messageDate"> otrzymana dnia: ' . $message->getCreationDate() . '</div>';
+                        echo '<div class="messageText"> ' . substr($message->getMessage(), 0, 29) . '</div>';
+                        echo '<a href="message.php?messageId=' . $message->getId() . '">przeczytaj wiadomość</a>';
+                    };
+                    echo '</div>';
+                    echo '<h3>Wysłane Wiadomości:</h3>';
+                    $messages = Message::loadAllMassagesSentByUser($conn, $loggedUserId);
+                    foreach ($messages as $message) {
+                        $messageReceiverId = $message->getReceiverId();
+                        $messageReceiver = User::loadUserbyId($conn, $messageReceiverId);
+                        echo '<div class="messageAuthor">wiadomośc wysłana do: ' . $messageReceiver->getName() .
+                            '</div>';
+                        echo '<div class="messageDate"> wysłana dnia: ' . $message->getCreationDate() . '</div>';
+                        echo '<div class="messageText"> ' . $message->getMessage() . '</div><br>';
+                    };
+                    echo '</div>';
                 }
                 ?>
             </section>
