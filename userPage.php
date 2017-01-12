@@ -1,11 +1,6 @@
 <?php
 session_start();
-require_once 'src/Tweet.php';
-require_once 'src/Message.php';
-require_once 'src/User.php';
-require_once 'connection.php';
-require_once 'src/Comment.php';
-
+require_once 'init.php';
 if (!isset($_SESSION['userId'])) {
     header('Location:login.php');
 }
@@ -77,9 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['messageForm']) && strl
     </nav>
     <main>
         <div class="row">
-            <div class="col-md-6 bg-success columnSection">
+
                 <?php
                 if ($_GET['userId'] == $loggedUserId) {
+                    echo '<div class="col-md-6 bg-success columnSection">';
                     echo '<section class="userTweetTable"><h3>Wszystkie twoje Tweety</h3>';
                     $tweets = Tweet::loadTweetByUserId($conn, $loggedUserId);
                     if (count($tweets) > 0) {
@@ -134,33 +130,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['messageForm']) && strl
                     } else {
                         echo '<h3>Otrzymane Wiadomości:</h3>';
                         $messages = Message::loadAllMassagesToReceiver($conn, $loggedUserId);
-                        foreach ($messages as $message) {
-                            $messageAuthorId = $message->getSenderId();
-                            $messageAuthor = User::loadUserbyId($conn, $messageAuthorId);
-                            echo '<div class="messageAuthor">wiadomośc otrzymana od: ' . $messageAuthor->getName() .
-                                '</div>';
-                            if ($message->getMessageRead() == 0) {
-                                echo "Wiadomość nieprzeczytana";
-                            }
-                            echo '<div class="messageDate"> otrzymana dnia: ' . $message->getCreationDate() . '</div>';
-                            echo '<div class="messageText"> ' . substr($message->getMessage(), 0, 29) . '</div>';
-                            echo '<a href="message.php?messageId=' . $message->getId() . '">przeczytaj wiadomość</a>';
-                        };
+                        if(count($messages) > 0) {
+                            foreach ($messages as $message) {
+                                $messageAuthorId = $message->getSenderId();
+                                $messageAuthor = User::loadUserbyId($conn, $messageAuthorId);
+                                echo '<div class="messageAuthor">wiadomośc otrzymana od: ' . $messageAuthor->getName() .
+                                    '</div>';
+                                if ($message->getMessageRead() == 0) {
+                                    echo "Wiadomość nieprzeczytana";
+                                }
+                                echo '<div class="messageDate"> otrzymana dnia: ' . $message->getCreationDate() . '</div>';
+                                echo '<div class="messageText"> ' . substr($message->getMessage(), 0, 29) . '</div>';
+                                echo '<a href="message.php?messageId=' . $message->getId() . '">przeczytaj wiadomość</a>';
+                            };
+                        } else {
+                            echo "nie masz wiadomosci";
+                        }
                         echo '<h3>Wysłane Wiadomości:</h3>';
                         $messages = Message::loadAllMassagesSentByUser($conn, $loggedUserId);
-                        foreach ($messages as $message) {
-                            $messageReceiverId = $message->getReceiverId();
-                            $messageReceiver = User::loadUserbyId($conn, $messageReceiverId);
-                            echo '<div class="messageAuthor">wiadomośc wysłana do: ' . $messageReceiver->getName() .
-                                '</div>';
-                            echo '<div class="messageDate"> wysłana dnia: ' . $message->getCreationDate() . '</div>';
-                            echo '<div class="messageText"> ' . $message->getMessage() . '</div><br>';
-                        };
+                        if(count($messages) > 0) {
+                            foreach ($messages as $message) {
+                                $messageReceiverId = $message->getReceiverId();
+                                $messageReceiver = User::loadUserbyId($conn, $messageReceiverId);
+                                echo '<div class="messageAuthor">wiadomośc wysłana do: ' . $messageReceiver->getName() .
+                                    '</div>';
+                                echo '<div class="messageDate"> wysłana dnia: ' . $message->getCreationDate() . '</div>';
+                                echo '<div class="messageText"> ' . $message->getMessage() . '</div><br>';
+                            };
+                        } else {
+                            echo "nie wyslales jeszcze zadnej wiadomosci";
+                        }
                     }
                     ?>
                 </section>
             </div>
-            <div class="col-md-2">
+        <?php if ($_GET['userId'] != $loggedUserId) {
+            echo '<div class="col-md-offset-6 col-md-2">';
+        } else {
+            echo '<div class="col-md-2">';
+        }
+
+        ?>
+<!--            <div class="col-md-2">-->
                 <section class="allUsers">
                     <h3>lista użytkowników:</h3>
                     <?php

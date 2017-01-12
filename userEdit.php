@@ -1,10 +1,6 @@
 <?php
 session_start();
-require_once 'src/Tweet.php';
-require_once 'src/Message.php';
-require_once 'src/User.php';
-require_once 'connection.php';
-require_once 'src/Comment.php';
+require_once 'init.php';
 
 if (!isset($_SESSION['userId'])) {
     header('Location:index.php');
@@ -16,9 +12,9 @@ $loggedUser = User::loadUserById($conn, $loggedUserId);
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($_POST['name'] ) && strlen(trim($_POST['name'])) > 1
         && isset($_POST['email'] ) && strlen(trim($_POST['email'])) > 5
-//         && isset($_POST['password']) && strlen($_POST['password'] > 5)
-//        && isset($_POST['retyped_password'])
-    ){
+        && isset($_POST['password']) && strlen(trim($_POST['password'])) >= 6
+        && isset($_POST['retyped_password'])
+        && trim($_POST['password']) == trim($_POST['retyped_password'])){
         if(trim($_POST['retyped_password']) == trim($_POST['password']) ){
             $loggedUser->setName(trim($_POST['name']));
             $loggedUser->setEmail(trim($_POST['email']));

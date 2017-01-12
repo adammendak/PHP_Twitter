@@ -1,5 +1,4 @@
 <?php
-
 class Tweet
 {
     private $id;

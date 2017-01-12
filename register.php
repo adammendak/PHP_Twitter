@@ -1,13 +1,12 @@
 <?php
+require_once 'init.php';
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
      if(isset($_POST['name']) && strlen(trim($_POST['name'])) > 0 
     && isset($_POST['email']) && strlen(trim($_POST['email'])) >= 5
     && isset($_POST['password']) && strlen(trim($_POST['password'])) >= 6
     && isset($_POST['retyped_password']) 
     && trim($_POST['password']) == trim($_POST['retyped_password'])){
-         require_once 'src/User.php';
-         require_once 'connection.php';
-         
+
          $user = new User();
          $user -> setName(trim($_POST['name']));
          $user -> setEmail(trim($_POST['email']));

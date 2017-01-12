@@ -1,12 +1,10 @@
 <?php
 session_start();
+require_once 'init.php';
+
 if (!isset($_SESSION['userId'])) {
     header('Location: login.php');
 }
-require_once 'src/Comment.php';
-require_once 'src/Tweet.php';
-require_once 'src/User.php';
-require_once 'connection.php';
 
 $loggedUserId = $_SESSION['userId'];
 $loggedUser = User::loadUserById($conn, $loggedUserId);
