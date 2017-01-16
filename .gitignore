@@ -3,3 +3,4 @@
 /nbproject/private/
 .idea/
 .gitignore
+connection.php

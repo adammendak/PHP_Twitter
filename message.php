@@ -15,13 +15,7 @@ $message = Message::loadAMassageByMassageId($conn, $_GET['messageId']);
 ?>
 <html lang="pl">
     <head>
-        <meta charset="utf-8">
-        <title>Strona Edycji</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/style.css">
+        <?php include('headers.php');?>
     </head>
     <body>
     <nav class="navbar navbar-fixed-top">
@@ -46,16 +40,31 @@ $message = Message::loadAMassageByMassageId($conn, $_GET['messageId']);
         </ul>
     </nav>
     <main>
-        <section class="message"><br>
-            Wiadomość:<br>
-            <?php
-                $messageSender = User::loadUserById($conn, $message->getSenderId());
-                echo "otrzymana od: " . $messageSender->getName() . '<br>';
-                echo "otrzymana dnia: " . $message->getCreationDate() . '<br>';
-                echo $message->getMessage() . '<br>';
+        <div class="row">
+            <section class="col-md-10 message"><br>
+                Wiadomość:<br>
+                <?php
+                    $messageSender = User::loadUserById($conn, $message->getSenderId());
+                    echo "otrzymana od: " . $messageSender->getName() . '<br>';
+                    echo "otrzymana dnia: " . $message->getCreationDate() . '<br>';
+                    echo $message->getMessage() . '<br>';
 
-            ?>
-        </section>
+                ?>
+            </section>
+            <div class="col-md-2">
+                <section class="allUsers class-fixed">
+                    <h3>lista użytkowników:</h3>
+                    <?php
+                    $allUsers = User::loadAllUsers($conn);
+                    foreach ($allUsers as $user) {
+                        if ($user->getId() != $loggedUserId) {
+                            echo '<div class="showUser" >' . $user->getName();
+                            echo ' <a href="userPage.php?userId=' . $user->getId() . '">Wyślij wiadomość</a></div><br>';
+                        }
+                    }
+                    ?>
+            </section>
+        </div>
     </main>
     <footer>
     </footer>
